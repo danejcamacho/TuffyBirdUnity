@@ -15,7 +15,12 @@ public class PipeSpawner : MonoBehaviour
         InvokeRepeating("SpawnPipe", 0f, spawnTime);
     }
 
-    void SpawnPipe(){
-        Instantiate(pipes, new Vector3(15, Random.Range(bottomRange, topRange),0), Quaternion.identity);
+    void SpawnPipe()
+    {
+        Instantiate(pipes, new Vector3(15, Random.Range(bottomRange, topRange),0), Quaternion.identity, gameObject.transform);
+    }
+
+    public void StopSpawning() {
+        CancelInvoke();
     }
 }

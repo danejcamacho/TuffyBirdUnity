@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //NOTE: variables/objects with public in front of them can be changed in the inspector
-
-
-
     //These are the variables for the 'velocity' and 'isMovable' attributes
-    public float velocity = 10f;
-    public bool isMovable = true;
+    [Header("Player Properties")]
+    public float velocity = 10.0f;
+    public float jump_power = 10.0f;
+    private bool isMovable = true;
+
 
     //Declaring our components
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     public AudioScript audioScript;
 
-
     //These will store our jumping and falling sprites
+    [Header("Player Assets")]
     public Sprite jumping;
     public Sprite falling;
+
+    [Header("Events")]
+    public UnityEngine.Events.UnityEvent died;
+    public UnityEngine.Events.UnityEvent scored;
 
 
     // Start is called before the first frame update
@@ -39,7 +42,7 @@ public class Player : MonoBehaviour
         //  is now equal to Vector2.up (aka new Vector2(0,1)) times your velocity value
         if(Input.GetKeyDown(KeyCode.Space) && isMovable){
             audioScript.PlayJumpSound();
-            rb.velocity = Vector2.up * velocity;
+            rb.velocity = Vector2.up * jump_power;
         }
 
         //checks if the velocity (on the y axis) is less or greater than zero and changes the sprite accordingly
@@ -59,6 +62,7 @@ public class Player : MonoBehaviour
         if(other.gameObject.tag == "Fail" && isMovable ){
             audioScript.PlayHitSound();
             isMovable = false;
+            died.Invoke();
         }
     }
 
@@ -67,6 +71,8 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Score" && isMovable ){
             audioScript.PlayScoreSound();
+            scored.Invoke();
+
         }
         
     }
